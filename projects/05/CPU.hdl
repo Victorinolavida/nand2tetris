@@ -41,16 +41,61 @@ CHIP CPU {
     PARTS:
     // Put your code here:
 
-    // register A 
+    // register A Mux
+    Mux16(a=instruction,b=ALUout,sel=instruction[15],out=inRegisterA);
 
-    DMux(in=in,sel=instruction[15],a=registerA,b=registerAB)
+    //ARegister
+    //selecting when load 
+    Mux(a=true,b=instruction[5],sel=instruction[15],out=loadByInstruction);
+    ARegister(in=inRegisterA,load=loadByInstruction,out=outARegister);
+    //addressM
+    Or16(a=false,b=outARegister,out[0..14]=addressM);
 
-    //registerA
+    //second Mux
+    And(a=instruction[15],b=instruction[12],out=selMux);
+    Mux16(a=outARegister,b=inM,sel=selMux,out=outMux);
 
-    Mux16(a=registerA,ALUout,sel,out=inRegisterA);
+    //DRegister
+    And(a=instruction[15],b=instruction[4],out=loadDRegister);
+    DRegister(in=ALUout,load=loadDRegister,out=outDRegister);
 
-    ARegister(in=inRegisterA ,load= ,out=outRegisterA);
+    //ALU
+    //isC
+
+    And(a = instruction[15], b = instruction[11], out = zx);
+    And(a = instruction[15], b = instruction[10], out = nx);
+    And(a = instruction[15], b = instruction[9], out = zy);
+    And(a = instruction[15], b = instruction[8], out = ny);
+    And(a = instruction[15], b = instruction[7], out = f);
+    And(a = instruction[15], b = instruction[6], out = nop);
 
 
-    ALU(x= ,y= ,zx= ,nx= ,zy= ,ny= ,f= ,no= ,out=ALUout,zr= ,ng= )
+    ALU(x=outDRegister ,y=outMux ,zx=zx ,nx=nx ,zy=zy ,ny=ny ,f=f,no=nop ,out=ALUout ,zr=zr ,ng=ng );
+    Or16(a=false,b=ALUout,out=outM);
+
+    //writeM
+    Mux(a=false,b=instruction[3],sel=instruction[15],out=writeM);
+
+    //PC
+    //is intruccion C
+    And(a = instruction[15], b = instruction[0], out = isGT);
+    And(a = instruction[15], b = instruction[1], out = isEQ);
+    And(a = instruction[15], b = instruction[2], out = isLT);
+
+    //comparing ALU outs and defining is a jump
+    And(a = ng, b = isLT, out = isLtJump);
+    And(a = zr, b = isEQ, out = isEqJump);
+
+
+    Not(in = ng, out = notNg);
+    Not(in = zr, out = notZr);
+    And(a = notNg, b = notZr, out = isOutGt);
+    
+    And(a = isOutGt, b = isGT, out = isGtJump);
+
+    Or(a = isLtJump, b = isEqJump, out = isJump);
+    Or(a = isJump, b = isGtJump, out = jump);
+
+    PC(in = outARegister, load = jump, inc = true, reset = reset, out[0..14] = pc);
+
 }
