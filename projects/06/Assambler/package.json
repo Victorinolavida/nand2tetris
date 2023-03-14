@@ -1,0 +1,11 @@
+{
+  "name": "assambler",
+  "version": "1.0.0",
+  "description": "assabler for nand2tetris course",
+  "main": "assambler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jose Victorino Ruiz",
+  "license": "ISC"
+}
