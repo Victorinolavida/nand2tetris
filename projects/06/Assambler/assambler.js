@@ -10,7 +10,7 @@ function main() {
 
   const folders = [];
   fs.readdirSync(FOLDER_FILES).forEach((file) => {
-    if (file.toString() !== "Assambler") {
+    if (file.toString() !== "Assambler" && file.toString()!==".DS_Store") {
       folders.push(FOLDER_FILES + file + "/");
     }
   });

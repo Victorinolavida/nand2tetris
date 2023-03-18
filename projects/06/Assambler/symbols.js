@@ -29,12 +29,11 @@ function is_variable(instruction){
     // console.log(VARIABLES)
     if(!instruction.startsWith("@")) return;
     let label = instruction.slice(1);
-    if(PRE_DEF_SYMBOLS[label] &&instruction.indexOf("\(")===-1) return;
+    if(PRE_DEF_SYMBOLS[label] && instruction.indexOf("\(")===-1) return;
     if(VARIABLES[label])return;
     if(isNaN(label)){
-
-    VARIABLES[label] = VARIABLES_INDICE;
-    VARIABLES_INDICE++;
+        VARIABLES[label] = VARIABLES_INDICE;
+        VARIABLES_INDICE++;
     }
 }
 
@@ -61,6 +60,8 @@ function remove_labels(code){
             code_without_labels[i] = "@"+symbols(label)
         }
     }
+    console.log(code_without_labels)
+    console.log(VARIABLES)
     return code_without_labels
 }
 
