@@ -134,3 +134,42 @@ The hability to evalue a boolean expresion and based in this value executes o mo
 11  0;JMP
     
 ```
+
+
+# Virtual Machine
+
+## stack machine 
+- Stack
+- Arquitecture 
+- Commands
+
+### Stack
+#### stack operations
+- push: Add a plate (object) at the stack's top
+- pop: remove the top plate (object)
+
+### stack machine is manipulated by: 
+- Arithmetic / logical commands
+- Memory segments commands 
+- Branching commands
+- function commands
+
+*when use a virtual memory segment you can preserve variable semantic but we lost veriables names*
+
+## Memory segments
+
+![](./memory.png)
+
+
+## implementing *local,argument,this,that*
+![](./implementing_memory.png)
+
+## implementing *static*
+![](./implementing_static.png)
+
+
+## implementing *temp*
+![](./temp.png)
+
+## implementing *pointer*
+![](./pointer.png)

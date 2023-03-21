@@ -1,8 +1,10 @@
-const FOLDER_FILES = "/Users/victorino.ruiz/Desktop/nand2tetris/projects/06/";
+//const FOLDER_FILES = "/Users/victorino.ruiz/Desktop/nand2tetris/projects/06/";
 const fs = require("fs");
-const { translate } = require("./code");
+//const { translate } = require("./code");
 
 const args = process.argv.slice(2);
+
+/*
 function main() {
   let FILE_PATH = "";
 
@@ -44,3 +46,48 @@ try {
 } catch (e) {
   console.error("Error: ", e.message);
 }
+*/
+
+const {Parcer} = require("./code")
+
+
+class Main{
+  constructor(file){
+    this.file_name = file
+    this.error  = undefined;
+    // this._file = this.open_file(file)
+    //this.write_code()
+  }
+
+  open_file(){
+    try {
+
+      let file = fs.readFileSync(this.file_name, "utf8").split("\n").filter(Boolean);
+      this._file = file;
+    } catch (error) {
+      console.error(`Error: file ${this.file_name} does not found`)
+      this.error = true;
+    }
+  }
+
+
+  write_code(){
+    this.open_file()
+
+    if(this.error || !this._file){
+      console.log(`Error: ${this.file_name} does not exist`)
+    };
+
+    const code_parcered = new Parcer(this._file).code_asm
+    // console.log(code_parcered)
+    fs.writeFileSync(`${this.file_name.replace('asm','hack')}`,code_parcered.join("\n"));
+    console.log(`---------  ${this.file_name.replace('asm','hack')} has been created  -------`)
+  }
+
+
+}
+
+
+const file = new Main(args[0])
+file.write_code()
+
