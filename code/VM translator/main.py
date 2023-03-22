@@ -69,7 +69,7 @@ class Code():
     
 
     def push(self,instrution):
-        push_intruction=f"//{instrution}"
+        push_intruction=f"//{instrution}\n"
         number = re.findall(r'\d+', instrution)
 
         if "constant" in instrution:
@@ -85,6 +85,7 @@ class Code():
 
         else:
             #set segmen after address base
+
             push_intruction += f"@{number[0]}\n"
             push_intruction += f"D=A\n"
 
@@ -125,7 +126,7 @@ class Code():
 
     def pop(self,instrution):
         # print(instrution)
-        pop_intruction=f"//{instrution}"
+        pop_intruction=f"//{instrution}\n"
         number = re.findall(r'\d+', instrution)
 
         
@@ -138,6 +139,7 @@ class Code():
             pop_intruction+=f"M=M-1\n"
             pop_intruction+=f"A=M\n"
             pop_intruction+=f"D=M\n"
+            pop_intruction+=f"M=0\n"
 
             pop_intruction += f"@{ int(MEMORY_SEGMENTS['TEMP']) + int(number[0])}\n"
             pop_intruction += f"M=D\n"
@@ -165,6 +167,8 @@ class Code():
             pop_intruction+=f"M=M-1\n"
             pop_intruction+=f"A=M\n"
             pop_intruction+=f"D=M\n"
+            pop_intruction+=f"M=0\n"
+
 
             pop_intruction+=f"@address\n"
             pop_intruction+=f"A=M\n"
@@ -192,10 +196,15 @@ class Code():
         operation_asm +="M=M-1\n"
         operation_asm +="A=M\n"
         operation_asm +="D=M\n"
+        operation_asm +="M=0\n"
+        
         operation_asm +="@0\n"
         operation_asm +="M=M-1\n"
         operation_asm +="A=M\n"
-        operation_asm +=f"D=D{operation}M\n"
+        if operation == "+":
+            operation_asm +=f"M=D{operation}M\n"
+        elif operation == "-":
+            operation_asm +=f"M=M{operation}D\n"
         operation_asm +="@0\n"
         operation_asm +="M=M+1\n"
 
