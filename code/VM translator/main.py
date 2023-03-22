@@ -38,17 +38,32 @@ class Main():
             return vm_code.readlines()
 
     def parser(self):
+        self.__asm_code = list()
+
         for row in self.__file:
             if row.startswith("//"):
                 continue
             l = Code()
             if "push" in row:
-                print(l.push(row))
-            if 'pop' in row:
-                print(l.pop(row))
+                self.__asm_code.append(l.push(row))
+                # pass
+            elif 'pop' in row:
+                self.__asm_code.append(l.pop(row))
+                # pass
+            if "add" in row:
+                self.__asm_code.append(l.operation("+"))
+                # pass
+            elif "sub" in row:
+                self.__asm_code.append(l.operation("-"))
                 # pass
 
-    
+    def save(self):
+        self.parser()
+        
+        data = "\n".join(self.__asm_code)
+
+        with open(f'test1.asm', 'w') as file:
+            file.write(data)
 
 class Code():
     
@@ -60,31 +75,7 @@ class Code():
         if "constant" in instrution:
             push_intruction += f"@{number[0]}\n"
             push_intruction += "D=A\n"
-           
-        elif "local" in instrution or "argument" in instrution or  "this" in instrution  or  "that" in instrution:
-
-            
-            #load value of instrution
-            if "local" in instrution:
-                print("-----")
-                push_intruction += f"@{int(MEMORY_SEGMENTS['LCL'])}\n"
-
-            if  "argument" in instrution:
-                 push_intruction += f"@{int(MEMORY_SEGMENTS['ARG'])}\n"
-
-            if "this" in instrution:
-                push_intruction += f"@{int(MEMORY_SEGMENTS['THIS'])}\n"
-                
-            if "that" in instrution:
-                push_intruction += f"@{int(MEMORY_SEGMENTS['THAT'])}\n"
-
-            #get addres + i
-            push_intruction += f"D=A\n"
-            push_intruction += f"@{int(number[0])}\n"
-            push_intruction += f"D=D+A\n"
-            push_intruction += "A=D\n"
-            push_intruction += "D=M\n"
-
+        
         elif "static" in instrution:
             pass
         
@@ -92,51 +83,127 @@ class Code():
             push_intruction += f"@{ int(MEMORY_SEGMENTS['TEMP']) + int(number[0])}\n"
             push_intruction += f"D=M\n"
 
+        else:
+            #set segmen after address base
+            push_intruction += f"@{number[0]}\n"
+            push_intruction += f"D=A\n"
+
+            if "local" in instrution:
+                push_intruction += f"@{MEMORY_SEGMENTS['LCL']}\n"
+            elif "argument" in instrution:
+                push_intruction += f"@{MEMORY_SEGMENTS['ARG']}\n"
+            elif "this" in instrution:
+                push_intruction += f"@{MEMORY_SEGMENTS['THIS']}\n"
+            elif "that" in instrution:
+                push_intruction += f"@{MEMORY_SEGMENTS['THAT']}\n"
+
+
+
+            # //push local 10 example
+                # @10
+                # D=A
+                # @1
+                # A=D+M
+                # D=M
+                # @0
+                # M=M+1
+                # A=M-1
+                # M=D
+
+            push_intruction += "A=D+M\n"
+            push_intruction += "D=M\n"
+
         
-        
-        push_intruction += "@0\n"
-        push_intruction += "A=M\n"
-        push_intruction += "M=D\n"
+        #pushing value in stack
         push_intruction += "@0\n"
         push_intruction += "M=M+1\n"
+        push_intruction += "A=M-1\n"
+        push_intruction += "M=D\n"
 
 
         return push_intruction
 
     def pop(self,instrution):
-        print(instrution)
+        # print(instrution)
         pop_intruction=f"//{instrution}"
         number = re.findall(r'\d+', instrution)
 
-        if "local" in instrution or "argument" in instrution or  "this" in instrution  or  "that" in instrution:
-            
-            #pop_intruction += "@0\n"
-            #pop_intruction += "M=M-1\n"
-            #pop_intruction += "D=M\n"
+        
+        if "static" in instrution:
+            pass
+        
+        elif "temp" in instrution:
+            #get stack value
+            pop_intruction+=f"@0\n"
+            pop_intruction+=f"M=M-1\n"
+            pop_intruction+=f"A=M\n"
+            pop_intruction+=f"D=M\n"
 
-            #load value of instrution
+            pop_intruction += f"@{ int(MEMORY_SEGMENTS['TEMP']) + int(number[0])}\n"
+            pop_intruction += f"M=D\n"
+
+
+        else:
+            
+            pop_intruction+=f"@{number[0]}\n"
+            pop_intruction+=f"D=A\n"
+            
             if "local" in instrution:
-                pop_intruction += f"@{int(MEMORY_SEGMENTS['LCL'])}\n"
+                pop_intruction += f"@{MEMORY_SEGMENTS['LCL']}\n"
+            elif "argument" in instrution:
+                pop_intruction += f"@{MEMORY_SEGMENTS['ARG']}\n"
+            elif "this" in instrution:
+                pop_intruction += f"@{MEMORY_SEGMENTS['THIS']}\n"
+            elif "that" in instrution:
+                pop_intruction += f"@{MEMORY_SEGMENTS['THAT']}\n"
 
-            if  "argument" in instrution:
-                pop_intruction += f"@{int(MEMORY_SEGMENTS['ARG'])}\n"
-
-            if "this" in instrution:
-                pop_intruction += f"@{int(MEMORY_SEGMENTS['THIS'])}\n"
-                
-            if "that" in instrution:
-                pop_intruction += f"@{int(MEMORY_SEGMENTS['THAT'])}\n"
+            pop_intruction+=f"D=D+M\n"
+            pop_intruction+=f"@address\n"
+            pop_intruction+=f"M=D\n"
             
-            pop_intruction += "D=A\n"
-            pop_intruction += f"@{int(number[0])}\n"
-            pop_intruction += "D=D+A"
-            # pop_intruction += f"A=M\n"
-            # pop_intruction += f"M=D\n"
+            pop_intruction+=f"@0\n"
+            pop_intruction+=f"M=M-1\n"
+            pop_intruction+=f"A=M\n"
+            pop_intruction+=f"D=M\n"
+
+            pop_intruction+=f"@address\n"
+            pop_intruction+=f"A=M\n"
+            pop_intruction+=f"M=D\n"
 
         return pop_intruction
 
+    def operation(self,operation="+"):
+        # @0
+        # M=M-1
+        # A=M
+        # D=M
+        # @0
+        # M=M-1
+        # A=M
+        # D=D+M
+        # @0
+        # M=M+1
+        name = 'add'
+        if operation == "-":
+            name = "sub"
+
+        operation_asm =f"//{name}\n"
+        operation_asm +="@0\n"
+        operation_asm +="M=M-1\n"
+        operation_asm +="A=M\n"
+        operation_asm +="D=M\n"
+        operation_asm +="@0\n"
+        operation_asm +="M=M-1\n"
+        operation_asm +="A=M\n"
+        operation_asm +=f"D=D{operation}M\n"
+        operation_asm +="@0\n"
+        operation_asm +="M=M+1\n"
+
+        return operation_asm
+
+    def sub():
+        pass
 
 
-file = Main("test.vm").parser()
-
+file = Main("test.vm").save()
 #print(file)
