@@ -108,7 +108,7 @@ class Code():
     def pop(self,instrution):
         pop_intruction=f"//{instrution}\n"
         number = re.findall(r'\d+', instrution)
-
+        print('AAAAAAAAAAAAA')
         
         if "static" in instrution:
             pass
@@ -127,20 +127,43 @@ class Code():
 
         else:
             
+            
             pop_intruction+=f"@{number[0]}\n"
             pop_intruction+=f"D=A\n"
-            
+            name = ''
             if "local" in instrution:
                 pop_intruction += f"@{MEMORY_SEGMENTS['LCL']}\n"
+                name="lcl"
             elif "argument" in instrution:
                 pop_intruction += f"@{MEMORY_SEGMENTS['ARG']}\n"
+                name="arg"
             elif "this" in instrution:
+                name="this"
                 pop_intruction += f"@{MEMORY_SEGMENTS['THIS']}\n"
             elif "that" in instrution:
+                name="that"
                 pop_intruction += f"@{MEMORY_SEGMENTS['THAT']}\n"
 
+                        # @10
+                        # D=A
+                        # @1
+                        # D=M+D
+
+                        # @add
+                        # M=D
+
+                        # @0
+                        # M=M-1
+                        # A=M
+                        # D=M
+
+                        # @add
+                        # A=M
+                        # M=D
+
             pop_intruction+=f"D=D+M\n"
-            pop_intruction+=f"@address\n"
+            pop_intruction+=f"@add.{number[0]}.{name}\n"
+           
             pop_intruction+=f"M=D\n"
             
             pop_intruction+=f"@0\n"
@@ -148,17 +171,18 @@ class Code():
             pop_intruction+=f"A=M\n"
             pop_intruction+=f"D=M\n"
 
-            pop_intruction+=f"@address\n"
+            pop_intruction+=f"@add.{number[0]}.{name}\n"
             pop_intruction+=f"A=M\n"
             pop_intruction+=f"M=D\n"
-
+            
         return pop_intruction
 
     def operation(self,operation):
         if "push" in operation:
             return self.push(operation)
         elif 'pop' in operation:
-            return self.push(operation)
+            print(self.pop(operation))
+            return self.pop(operation)
 
         elif 'neg' in operation:
             return self.negate()

@@ -1,403 +1,190 @@
-//push constant 17
+//push constant 10
 
-@17
+@10
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//push constant 17
+//pop local 0
 
-@17
-D=A
 @0
-M=M+1
-A=M-1
+D=A
+@1
+D=D+M
+@add.0.lcl
 M=D
-
-//eq
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.0.lcl
 A=M
-D=D-M
-@eq_58
-D;JNE
-@0
-A=M
-M=-1
-@END.58
-D;JMP
-(eq_58)
-@0
-A=M
-M=0
-(END.58)
-@0
-M=M+1
+M=D
 
-//push constant 17
+//push constant 21
 
-@17
+@21
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//push constant 16
+//push constant 22
 
-@16
+@22
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//eq
+//pop argument 2
+
+@2
+D=A
+@2
+D=D+M
+@add.2.arg
+M=D
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.2.arg
 A=M
-D=D-M
-@eq_56
-D;JNE
-@0
-A=M
-M=-1
-@END.56
-D;JMP
-(eq_56)
-@0
-A=M
-M=0
-(END.56)
-@0
-M=M+1
-
-//push constant 16
-
-@16
-D=A
-@0
-M=M+1
-A=M-1
 M=D
 
-//push constant 17
+//pop argument 1
 
-@17
+@1
 D=A
-@0
-M=M+1
-A=M-1
+@2
+D=D+M
+@add.1.arg
 M=D
-
-//eq
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.1.arg
 A=M
-D=D-M
-@eq_63
-D;JNE
-@0
-A=M
-M=-1
-@END.63
-D;JMP
-(eq_63)
-@0
-A=M
-M=0
-(END.63)
-@0
-M=M+1
+M=D
 
-//push constant 892
+//push constant 36
 
-@892
+@36
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//push constant 891
+//pop this 6
 
-@891
+@6
 D=A
-@0
-M=M+1
-A=M-1
+@3
+D=D+M
+@add.6.this
 M=D
-
-//lt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.6.this
 A=M
-D=D-M
-@lt_29
-D;JLE
-@0
-A=M
-M=-1
-@END.29
-D;JMP
-(lt_29)
-@0
-A=M
-M=0
-(END.29)
-@0
-M=M+1
+M=D
 
-//push constant 891
+//push constant 42
 
-@891
+@42
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//push constant 892
+//push constant 45
 
-@892
+@45
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//lt
+//pop that 5
+
+@5
+D=A
+@4
+D=D+M
+@add.5.that
+M=D
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.5.that
 A=M
-D=D-M
-@lt_57
-D;JLE
-@0
-A=M
-M=-1
-@END.57
-D;JMP
-(lt_57)
-@0
-A=M
-M=0
-(END.57)
-@0
-M=M+1
-
-//push constant 891
-
-@891
-D=A
-@0
-M=M+1
-A=M-1
 M=D
 
-//push constant 891
+//pop that 2
 
-@891
+@2
 D=A
-@0
-M=M+1
-A=M-1
+@4
+D=D+M
+@add.2.that
 M=D
-
-//lt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
+@add.2.that
 A=M
-D=D-M
-@lt_16
-D;JLE
-@0
-A=M
-M=-1
-@END.16
-D;JMP
-(lt_16)
-@0
-A=M
-M=0
-(END.16)
-@0
-M=M+1
+M=D
 
-//push constant 32767
+//push constant 510
 
-@32767
+@510
 D=A
 @0
 M=M+1
 A=M-1
 M=D
 
-//push constant 32766
+//pop temp 6
 
-@32766
-D=A
-@0
-M=M+1
-A=M-1
-M=D
-
-//gt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@gt_43
-D;JGE
-@0
-A=M
-M=-1
-@END.43
-D;JMP
-(gt_43)
-@0
-A=M
-M=0
-(END.43)
-@0
-M=M+1
-
-//push constant 32766
-
-@32766
-D=A
-@0
-M=M+1
-A=M-1
+@11
 M=D
 
-//push constant 32767
+//push local 100
 
-@32767
+@100
 D=A
-@0
-M=M+1
-A=M-1
-M=D
-
-//gt
-@0
-M=M-1
-A=M
+@1
+A=D+M
 D=M
 @0
-M=M-1
-A=M
-D=D-M
-@gt_7
-D;JGE
-@0
-A=M
-M=-1
-@END.7
-D;JMP
-(gt_7)
-@0
-A=M
-M=0
-(END.7)
-@0
-M=M+1
-
-//push constant 32766
-
-@32766
-D=A
-@0
 M=M+1
 A=M-1
 M=D
 
-//push constant 32766
+//push that 5
 
-@32766
+@5
 D=A
-@0
-M=M+1
-A=M-1
-M=D
-
-//gt
-@0
-M=M-1
-A=M
+@4
+A=D+M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@gt_14
-D;JGE
-@0
-A=M
-M=-1
-@END.14
-D;JMP
-(gt_14)
-@0
-A=M
-M=0
-(END.14)
-@0
-M=M+1
-
-//push constant 57
-
-@57
-D=A
-@0
-M=M+1
-A=M-1
-M=D
-
-//push constant 31
-
-@31
-D=A
-@0
-M=M+1
-A=M-1
-M=D
-
-//push constant 53
-
-@53
-D=A
 @0
 M=M+1
 A=M-1
@@ -416,10 +203,13 @@ M=M+D
 @0
 M=M+1
 
-//push constant 112
+//push argument 1
 
-@112
+@1
 D=A
+@2
+A=D+M
+D=M
 @0
 M=M+1
 A=M-1
@@ -438,34 +228,31 @@ M=M-D
 @0
 M=M+1
 
-//neg
-0@
-A=M-1
-M=-M
+//push this 6
 
-//and
-
-@0
-M=M-1
-A=M
-D=M
-@0
-M=M-1
-A=M
-M=D&M
-@0
-M=M+1
-
-//push constant 82
-
-@82
+@6
 D=A
+@3
+A=D+M
+D=M
 @0
 M=M+1
 A=M-1
 M=D
 
-//or
+//push this 6
+
+@6
+D=A
+@3
+A=D+M
+D=M
+@0
+M=M+1
+A=M-1
+M=D
+
+//add
 
 @0
 M=M-1
@@ -474,12 +261,40 @@ D=M
 @0
 M=M-1
 A=M
-M=D|M
+M=M+D
 @0
 M=M+1
 
-//not
+//sub
 
 @0
+M=M-1
+A=M
+D=M
+@0
+M=M-1
+A=M
+M=M-D
+@0
+M=M+1
+
+//push temp 6
+
+@11
+D=M
+@0
+M=M+1
 A=M-1
-M=!M
+M=D
+
+//add
+@0
+M=M-1
+A=M
+D=M
+@0
+M=M-1
+A=M
+M=M+D
+@0
+M=M+1

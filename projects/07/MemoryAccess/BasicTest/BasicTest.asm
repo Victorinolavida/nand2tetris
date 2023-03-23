@@ -13,13 +13,14 @@ M=D
 D=A
 @1
 D=D+M
-@add.0.lcl
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.0.lcl
+M=0
+@address
 A=M
 M=D
 
@@ -47,13 +48,14 @@ M=D
 D=A
 @2
 D=D+M
-@add.2.arg
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.2.arg
+M=0
+@address
 A=M
 M=D
 
@@ -63,13 +65,14 @@ M=D
 D=A
 @2
 D=D+M
-@add.1.arg
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.1.arg
+M=0
+@address
 A=M
 M=D
 
@@ -88,13 +91,14 @@ M=D
 D=A
 @3
 D=D+M
-@add.6.this
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.6.this
+M=0
+@address
 A=M
 M=D
 
@@ -122,13 +126,14 @@ M=D
 D=A
 @4
 D=D+M
-@add.5.that
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.5.that
+M=0
+@address
 A=M
 M=D
 
@@ -138,13 +143,14 @@ M=D
 D=A
 @4
 D=D+M
-@add.2.that
+@address
 M=D
 @0
 M=M-1
 A=M
 D=M
-@add.2.that
+M=0
+@address
 A=M
 M=D
 
@@ -163,6 +169,7 @@ M=D
 M=M-1
 A=M
 D=M
+M=0
 @11
 M=D
 
@@ -191,15 +198,15 @@ A=M-1
 M=D
 
 //add
-
 @0
 M=M-1
 A=M
 D=M
+M=0
 @0
 M=M-1
 A=M
-M=M+D
+M=D+M
 @0
 M=M+1
 
@@ -216,11 +223,11 @@ A=M-1
 M=D
 
 //sub
-
 @0
 M=M-1
 A=M
 D=M
+M=0
 @0
 M=M-1
 A=M
@@ -253,24 +260,24 @@ A=M-1
 M=D
 
 //add
-
 @0
 M=M-1
 A=M
 D=M
+M=0
 @0
 M=M-1
 A=M
-M=M+D
+M=D+M
 @0
 M=M+1
 
 //sub
-
 @0
 M=M-1
 A=M
 D=M
+M=0
 @0
 M=M-1
 A=M
@@ -288,14 +295,14 @@ A=M-1
 M=D
 
 //add
-
 @0
 M=M-1
 A=M
 D=M
+M=0
 @0
 M=M-1
 A=M
-M=M+D
+M=D+M
 @0
 M=M+1
