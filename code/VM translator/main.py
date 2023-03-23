@@ -10,7 +10,9 @@ Proposed design:
 
 
 """
+import sys
 
+print(sys.argv)
 import re
 import random
 
@@ -31,7 +33,11 @@ class Main():
     
     def __init__(self, file):
         self.__file = self.read_file(file)
-        self.__file_name = file.replace(".vm","")
+        self.__path = file
+        self.get_names()
+
+    def get_names(self):
+        self.__new_path = self.__path.replace(".vm",".asm")
 
     def read_file(self,file):
 
@@ -48,10 +54,11 @@ class Main():
 
 
     def save(self):
+
         self.parser()
         data = "\n".join(self.__asm_code)
 
-        with open(f'test1.asm', 'w') as file:
+        with open(f'{self.__new_path}', 'w') as file:
            file.write(data)
 
 class Code():
@@ -157,7 +164,7 @@ class Code():
             return self.negate()
         elif 'add' in operation or 'sub' in operation:
             return self.arithmethic(operation)
-        elif 'and' in operation or 'or' in operation:
+        elif 'and' in operation or 'or' in operation or "not" in operation:
             return self.logic(operation)
         else:
             return self.comparation(operation)
@@ -180,7 +187,6 @@ class Code():
         asm_logic +="@0\n"
         asm_logic +="M=M-1\n"
         asm_logic +="A=M\n"
-
         asm_logic +=f"M=M{simbol}D\n"
         asm_logic +="@0\n"
         asm_logic +="M=M+1\n"
@@ -189,9 +195,9 @@ class Code():
 
     def logic(self,operation):
         simbol = ""
-        if operation == "and":
+        if operation.strip() == "and":
             simbol = '&'
-        elif operation == 'or':
+        elif operation.strip() == 'or':
             simbol = '|'
 
         asm_logic =f"//{operation}\n"
@@ -205,24 +211,30 @@ class Code():
         asm_logic +="M=M-1\n"
         asm_logic +="A=M\n"
 
-        asm_logic +=f"M=D{simbol}|M\n"
+        asm_logic +=f"M=D{simbol}M\n"
         asm_logic +="@0\n"
         asm_logic +="M=M+1\n"
-        
+
+        if "not" in operation:
+            asm_logic =f"//{operation}\n"
+            asm_logic += "@0\n"
+            asm_logic += "A=M-1\n"
+            asm_logic += "M=!M\n"
+            
         return asm_logic
 
     def comparation(self, operation):
         key = str(random.randint(1, 100))
-        asm_comp = f"//{operation}\n"
+        asm_comp = f"//{operation}"
 
         JMP = ''
 
         if operation.strip() == 'eq':
             JMP = 'JNE' #no cero
         elif operation.strip() == 'lt':
-            JMP = "JLT" #top - prev < 0
+            JMP = "JLE" #top - prev <= 0
         elif operation.strip() == 'gt':
-            JMP = "JGT" #top - prev > 0
+            JMP = "JGE" #top - prev => 0
 
         #getting values from stack
         asm_comp += "@0\n"
@@ -234,7 +246,7 @@ class Code():
         asm_comp += "M=M-1\n"
         asm_comp += "A=M\n"
         #top - prev
-        asm_comp += "D=M-D\n"
+        asm_comp += "D=D-M\n"
 
         asm_comp += f"@{operation.strip()+'_'+key}\n"
         asm_comp += f"D;{JMP}\n"
@@ -254,21 +266,23 @@ class Code():
         asm_comp += "@0\n"
         asm_comp += "M=M+1\n"
 
-
+        print(asm_comp)
         return asm_comp
     
     def negate(self):
+
         asm_negate = "//neg\n"
-        asm_negate += "@0\n"
-        asm_negate += "M=M-1\n"
-        asm_negate += "A=M\n"
-        asm_negate += "M=!M\n"
-        asm_negate += "@0\n"
-        asm_negate += "M=M+1\n"
+        asm_negate += "0@\n"
+        asm_negate += "A=M-1\n"
+        asm_negate += "M=-M\n"
 
         return asm_negate
 
+file_path = sys.argv[1]
 
+if ".vm" in file_path:
 
-file = Main("test.vm").save()
+    file = Main(file_path).save()
+else:
+    print("error de archivo")
 #print(file)
