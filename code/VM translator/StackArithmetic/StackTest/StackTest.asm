@@ -1,485 +1,413 @@
-//push constant 17
-
+// push constant 17
 @17
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 17
-
+// push constant 17
 @17
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //eq
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@eq_79
-D;JNE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.79
-D;JMP
-(eq_79)
+@JUMP.equal.9
+D;JEQ
 @0
-A=M
+A=M-1
 M=0
-(END.79)
-@0
-M=M+1
+(JUMP.equal.9)
 
-//push constant 17
-
+// push constant 17
 @17
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 16
-
+// push constant 16
 @16
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //eq
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@eq_16
-D;JNE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.16
-D;JMP
-(eq_16)
+@JUMP.equal.12
+D;JEQ
 @0
-A=M
+A=M-1
 M=0
-(END.16)
-@0
-M=M+1
+(JUMP.equal.12)
 
-//push constant 16
-
+// push constant 16
 @16
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 17
-
+// push constant 17
 @17
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //eq
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@eq_13
-D;JNE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.13
-D;JMP
-(eq_13)
+@JUMP.equal.15
+D;JEQ
 @0
-A=M
+A=M-1
 M=0
-(END.13)
-@0
-M=M+1
+(JUMP.equal.15)
 
-//push constant 892
-
+// push constant 892
 @892
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 891
-
+// push constant 891
 @891
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //lt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
+A=A-1
 D=D-M
-@lt_75
-D;JLE
-@0
-A=M
 M=-1
-@END.75
-D;JMP
-(lt_75)
+@JUMP.less.18
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.75)
-@0
-M=M+1
+(JUMP.less.18)
 
-//push constant 891
-
+// push constant 891
 @891
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 892
-
+// push constant 892
 @892
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //lt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
+A=A-1
 D=D-M
-@lt_88
-D;JLE
-@0
-A=M
 M=-1
-@END.88
-D;JMP
-(lt_88)
+@JUMP.less.21
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.88)
-@0
-M=M+1
+(JUMP.less.21)
 
-//push constant 891
-
+// push constant 891
 @891
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 891
-
+// push constant 891
 @891
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //lt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
+A=A-1
 D=D-M
-@lt_50
-D;JLE
-@0
-A=M
 M=-1
-@END.50
-D;JMP
-(lt_50)
+@JUMP.less.24
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.50)
-@0
-M=M+1
+(JUMP.less.24)
 
-//push constant 32767
-
+// push constant 32767
 @32767
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 32766
-
+// push constant 32766
 @32766
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //gt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@gt_29
-D;JGE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.29
-D;JMP
-(gt_29)
+@JUMP.gt.27
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.29)
-@0
-M=M+1
+(JUMP.gt.27)
 
-//push constant 32766
-
+// push constant 32766
 @32766
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 32767
-
+// push constant 32767
 @32767
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //gt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@gt_97
-D;JGE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.97
-D;JMP
-(gt_97)
+@JUMP.gt.30
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.97)
-@0
-M=M+1
+(JUMP.gt.30)
 
-//push constant 32766
-
+// push constant 32766
 @32766
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 32766
-
+// push constant 32766
 @32766
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //gt
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-D=D-M
-@gt_91
-D;JGE
-@0
-A=M
+A=A-1
+D=M-D
 M=-1
-@END.91
-D;JMP
-(gt_91)
+@JUMP.gt.33
+D;JGT
 @0
 A=M
+A=A-1
 M=0
-(END.91)
-@0
-M=M+1
+(JUMP.gt.33)
 
-//push constant 57
-
+// push constant 57
 @57
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 31
-
+// push constant 31
 @31
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
-//push constant 53
-
+// push constant 53
 @53
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //add
-
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
+A=A-1
 M=M+D
-@0
-M=M+1
 
-//push constant 112
-
+// push constant 112
 @112
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //sub
-
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
+A=A-1
 M=M-D
-@0
-M=M+1
 
 //neg
-0@
+@0
 A=M-1
 M=-M
 
 //and
-
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-M=D&M
-@0
-M=M+1
+A=A-1
+M=M&D
 
-//push constant 82
-
+// push constant 82
 @82
 D=A
 @0
-M=M+1
-A=M-1
+A=M
 M=D
+A=A+1
+@0
+M=M+1
 
 //or
-
 @0
 M=M-1
 A=M
 D=M
-@0
-M=M-1
-A=M
-M=D|M
-@0
-M=M+1
+A=A-1
+M=M|D
 
 //not
-
 @0
 A=M-1
 M=!M
+
