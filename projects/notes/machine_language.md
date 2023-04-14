@@ -173,3 +173,66 @@ The hability to evalue a boolean expresion and based in this value executes o mo
 
 ## implementing *pointer*
 ![](./pointer.png)
+
+# Program control
+
+### branching commands
+- goto *label*
+- if-goto *label*
+- label *label*
+
+### Function commands
+- call *function*
+- function *function*
+- return *function*
+
+
+## VM branching commands
+- *goto* label //jump to execute the command just after label
+- *if-goto* label // cond =pop; if cond jump to execute the command just after label 
+- *label* label // label declaration command
+
+## The Function's state
+
+#### During run-time 
+- Each function uses a working stack + memory segments
+- The working stack and some of the segments should be:
+    - Created when the function starts running
+    - Maintained as long as the function is executing,
+    - Recycled when the funcion returns
+
+
+# Booting
+
+## VM programming convention
+One file in any VM program is expected to be named *Main.vm*; one VM function
+in this file is expected to be named *main*
+
+## VM implementation convention
+When the VM implementation starts running, or is reset, it starts executing the argument-less OS funciont *Sys.init*
+
+*Sys.init* the calls *Main.main*, and enters an infinite loop
+
+
+## Hardware platform convention
+
+#### Bootstrap code 
+
+```
+// Bootstrap code (should be written in assembly)
+
+SP=256
+Call Sys.init
+```
+
+# Special symbols in VM programs
+
+| Symbol      | Usage |
+| ----------- | ----------- |
+| SP      | This predefined symbol points to the memory address within the host RAM just followig the address containing the topmost stack value       |
+| LCL,ARG,THIS,THAT   | These predefinied symbols point, respectively, to the base addresses within the host RAM of the virtual segments, *local* ,*argumen* ,*this* and *that* of the currently running VM function.      |
+|R13-R15|These predefined sysbols can be used for any purpose|
+|Xxx.i symbols|Each static variable *i* in file *Xxx.vm* is translated into the assembly sumbol *Xxx.j*, where *j* is incremented each time a new static variable is encountered in the file *Xxx.vm*. In the subsequent assembly process, these symbolic variablers will be allocated to the RAM by the Hack assembler.|
+|*functionName $label*| let *foo* be a function within a VM file *Xxx*. Each *label bar* commadn within *foo* shold generate and insert int o the assebly code stream a symbo *Xxx.foo$bar*.When translating *goto bar* and *if-goto bar* command (within *foo*) into assembly, the full label specificacion *Xxx.foo$bar* must be used instead of *bar*|
+|*functionName*|Each *function foo* command within a VM file **Xxx** should genereate and insert into the assembly code stream a symbol **Xxx.foo** that labels the entry point to the function's code In the subsequent assembly process, the assembler woll translate this symbol into the physical memory address where the function code starts.|
+|*functionName* $ret.i|let **foo** be a functions within a VM file **Xxx**. Within **foo**, each functions **call** command should generate and insert into the assembly code stream a symbol *Xxx.foo$ret.i*, where *i* is a running integer (one such symbol should be generated for each **call** command within **foo**). This Symbol serves as the return address to the calling funcion, In the sebseqyent assebly process, the assembler will translate this symbol into the physical memory address of the command inmmediately after the funtion call command.|
