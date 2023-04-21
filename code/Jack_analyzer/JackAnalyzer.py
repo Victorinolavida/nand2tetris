@@ -153,6 +153,9 @@ class CompileEngine:
     def __str__(self) -> str:
         return self.__xml
 
+    def getXML(self):
+        return self.__xml
+
     def compileClass(self):
         self.appendXML("<class>")
         self.__tab += 1
@@ -165,6 +168,7 @@ class CompileEngine:
         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #{
         #TODO:  variables declaration
         self.__tokenized.advance()
+        self.compileClassVarDec()
         while self.__tokenized.symbol() != "}":
             if self.__tokenized.keyword() in ("METHOD",'FUNCTION','CONSTRUCTOR'):
                 self.compileSubroutine()
@@ -199,7 +203,8 @@ class CompileEngine:
         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
         self.__tokenized.advance()
 
-        self.compileVarDec()
+        while self.__tokenized.keyword() == "VAR":
+            self.compileVarDec()
 
         self.compileStaments()
 
@@ -217,9 +222,23 @@ class CompileEngine:
                 break
             self.compileStament()
             self.__tokenized.advance()
-        self.__tab -=1
-        self.appendXML("</statements>")
-        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
+        
+        if self.__tokenized.keyword() == "RETURN":
+            self.appendXML("<returnStatement>")
+            self.__tab +=1
+            self.appendXML(f"<keyword> {self.__tokenized.keyword().lower()} </keyword>")
+            self.__tokenized.advance()
+            self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
+            self.__tab -=1
+            self.appendXML("</returnStatement>")
+            self.__tab -=1
+            self.appendXML("</statements>")
+            self.appendXML("<symbol> } </symbol>")
+
+        else:
+            self.__tab -=1
+            self.appendXML("</statements>")
+            self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
 
     def compileStament(self):
         if self.__tokenized.keyword() == "WHILE":
@@ -227,9 +246,11 @@ class CompileEngine:
         if self.__tokenized.keyword() == "LET":
             self.compileLetStament()
         if self.__tokenized.keyword() == "IF":
-            self.printToken()
-        if self.__tokenized.keyword() == "ELSE":
-            self.printToken()
+            self.compileIfStament()
+        # if self.__tokenized.keyword() == "ELSE":
+        #     self.compileElseStament()
+        if self.__tokenized.keyword() == "DO":
+            self.compileDoStament()
 
     def printToken(self):
         self.appendXML(self.__tokenized.getToken())
@@ -242,12 +263,39 @@ class CompileEngine:
             self.__tab-=1
         self.appendXML("</parameterList>")
 
+    def compileIfStament(self):
+        self.appendXML("<ifStatement>")
+        self.__tab += 1
+        self.appendXML(f"<keyword> {self.__tokenized.keyword().lower()} </keyword>")
+        self.__tokenized.advance()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #(
+        self.__tokenized.advance()
+        if self.__tokenized.symbol() != ")":
+            self.compileExpression()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #)
+        self.__tokenized.advance()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #{
+        self.__tokenized.advance()
+
+        self.compileStaments()
+        self.__tokenized.advance()
+        if self.__tokenized.keyword() == "ELSE":
+            self.appendXML(f"<keyword> {self.__tokenized.keyword().lower()} </keyword>")
+            self.__tokenized.advance()
+            self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #{
+            self.compileStaments()
+            self.appendXML(self.__tokenized.getToken() + "<-----")
+
+            
+        self.__tab -= 1
+        self.appendXML("</ifStatement>")
+
 
     def appendXML(self,xml):
         self.__xml += "  "*self.__tab + xml + '\n'
 
     def compileVarDec(self):
-        while self.__tokenized.keyword() == "VAR":
+        if self.__tokenized.keyword() == "VAR":
             self.appendXML("<varDec>")
             self.__tab += 1
             self.appendXML(f"<keyword> {self.__tokenized.keyword().lower()} </keyword>")
@@ -319,60 +367,15 @@ class CompileEngine:
                     self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #]
                     self.__tokenized.advance() #=
                     self.compileExpression()
-                    self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #;
+                    # self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #;
                 else:
                     self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #;
                     self.__tokenized.advance()
                     self.compileExpression()
+
+            self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #;
             self.__tab -= 1
-            return
-            while self.__tokenized.symbol() != ";":
-                
-                self.__tokenized.advance()
-                self.appendXML(f"<identifier> {self.__tokenized.identifier()} </identifier>")#
-                self.__tokenized.advance()
-                self.printToken()
-                if self.__tokenized.symbol() == "[":
-                    pass
-
-            self.__tab -=1
             self.appendXML("</letStatement>")
-
-        # while(self.__tokenized.getToken() != ';'):
-        #     self.__tab +=1
-        #     self.appendXML("<letStatement>")
-        #     self.__tab +=1
-        #     self.appendXML(f"<keyword> {self.__tokenized.keyword()} </keyword>")
-        #     self.__tokenized.advance()
-        #     self.appendXML(f"<identifier> {self.__tokenized.identifier()} </identifier>")#
-        #     self.__tokenized.advance()
-
-        #     if self.__tokenized.symbol() == "[":
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #[
-        #         self.__tokenized.advance()
-        #         self.compileExpression()
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #]
-
-        #         self.__tokenized.advance()
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #=
-        #         self.__tokenized.advance()
-        #         self.compileExpression()
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
-        #         self.__tab -=1
-        #         self.appendXML("</letStatement>")
-        #         self.__tab -=1
-        #         self.__tokenized.advance()
-
-        #     else:
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
-        #         self.__tokenized.advance()
-        #         self.compileExpression()
-        #         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
-        #         self.__tab -=1
-        #         self.appendXML("</letStatement>")
-        #         self.__tab -=1
-        #         self.__tokenized.advance()
-        # self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
 
 
     def compileWhileStament(self):
@@ -382,9 +385,7 @@ class CompileEngine:
         self.__tokenized.advance()
         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #(
         self.__tokenized.advance()
-        self.__tab +=1
         self.compileExpression()
-        self.__tab -=1
 
         self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #)
         self.__tokenized.advance()
@@ -441,6 +442,8 @@ class CompileEngine:
             self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
             self.__tokenized.advance()
             self.compileExpression()
+            self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>")
+            self.__tokenized.advance()
 
 
         if self.__tokenized.tokenType()=="INT_CONST":
@@ -453,12 +456,38 @@ class CompileEngine:
             self.__tokenized.advance()
 
         if self.__tokenized.tokenType() == 'STRING_CONST':
-            self.appendXML(f"<stringConst> {self.__tokenized.stringVal()} </stringConst>")
+            self.appendXML(f"<stringConstant> {self.__tokenized.stringVal()} </stringConstant>")
             self.__tokenized.advance()
         
         self.__tab -=1
         self.appendXML("</term>")
+    
+    def compileDoStament(self):
+        self.appendXML("<doStatement>")
+        self.__tab += 1
+        self.appendXML(f"<keyword> {self.__tokenized.keyword().lower()} </keyword>") #do
+        self.__tokenized.advance()
+        self.appendXML(f"<identifier> {self.__tokenized.identifier()} </identifier>")
+        self.__tokenized.advance()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #.
+        self.__tokenized.advance()
+        self.appendXML(f"<identifier> {self.__tokenized.identifier()} </identifier>")
+        self.__tokenized.advance()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #.
+        self.appendXML("<expressionList>")
+        self.__tokenized.advance()
+        if self.__tokenized.symbol() != ")":
+            self.__tab += 1
+            self.compileExpression()
+            self.__tab -= 1
 
+        self.appendXML("</expressionList>")
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #)
+        self.__tokenized.advance()
+        self.appendXML(f"<symbol> {self.__tokenized.symbol()} </symbol>") #;
+
+        self.__tab -=1
+        self.appendXML("</doStatement>")
 
 class JackAnalyzer:
 
@@ -496,6 +525,10 @@ class JackAnalyzer:
     def getCode(self):
         return self.__jackCode
 
+    def save_xml(self,text):
+        with open("test.xml","w") as file:
+            file.write(text.replace('"',''))
+        file.close()
 
 def main():
     path = sys.argv[1]
@@ -523,6 +556,6 @@ def main():
 
         tokenizer.advance()
 
-    # print(test)
+    analyzer.save_xml(test.getXML())
 
 main()
