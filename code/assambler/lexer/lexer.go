@@ -32,6 +32,9 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.skipWhitespace()
 	switch l.ch {
+	case '/':
+		l.skipComment()
+
 	case '@':
 		l.readChar()
 		memoryAddress := l.readAInstructions()
@@ -42,6 +45,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.Label, label)
 	case 0:
 		tok = newToken(token.EOF, "")
+
 	default:
 		if isLetter(l.ch) {
 			cInstruction := l.readCInstructions()
@@ -104,4 +108,23 @@ func isDigit(ch byte) bool {
 
 func isCloseParenthesis(ch byte) bool {
 	return ch == ')'
+}
+
+func (l *Lexer) skipComment() {
+	currChar := l.ch
+	nextChar := l.peekChar()
+
+	if currChar == '/' && nextChar == '/' {
+		for l.ch != '\n' {
+			l.readChar()
+		}
+	}
+	l.readChar()
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	}
+	return l.input[l.readPosition]
 }
