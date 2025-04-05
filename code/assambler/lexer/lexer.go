@@ -24,17 +24,17 @@ func (l *Lexer) readChar() {
 		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
-	l.readPosition++
+	l.readPosition += 1
+
 }
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 	l.skipWhitespace()
-	switch l.ch {
-	case '/':
-		l.skipComment()
+	l.skipComment()
 
+	switch l.ch {
 	case '@':
 		l.readChar()
 		memoryAddress := l.readAInstructions()
@@ -61,7 +61,7 @@ func (l *Lexer) NextToken() token.Token {
 }
 
 func (l *Lexer) skipWhitespace() {
-	for l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n' {
+	for l.isWhitespaceCharacter() {
 		l.readChar()
 	}
 }
@@ -72,10 +72,14 @@ func (l *Lexer) isLineBreak() bool {
 
 func (l *Lexer) readAInstructions() string {
 	startPosition := l.position
-	for !l.isLineBreak() && (isLetter(l.ch) || isDigit(l.ch)) {
+	for !l.isLineBreak() && l.isValidMemoryAddressLabel() {
 		l.readChar()
 	}
 	return l.input[startPosition:l.position]
+}
+
+func (l *Lexer) isValidMemoryAddressLabel() bool {
+	return isLetter(l.ch) || isDigit(l.ch)
 }
 
 func (l *Lexer) readLabel() string {
@@ -119,7 +123,7 @@ func (l *Lexer) skipComment() {
 			l.readChar()
 		}
 	}
-	l.readChar()
+	l.skipWhitespace()
 }
 
 func (l *Lexer) peekChar() byte {
@@ -127,4 +131,8 @@ func (l *Lexer) peekChar() byte {
 		return 0
 	}
 	return l.input[l.readPosition]
+}
+
+func (l *Lexer) isWhitespaceCharacter() bool {
+	return l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n'
 }

@@ -70,5 +70,42 @@ func TestLexer(t *testing.T) {
 			tok := l.NextToken()
 			utils.AssertToken(t, tok, token.Token{Type: tt.expectedType, Value: tt.expectedLiteral})
 		}
+
+	})
+
+	t.Run("EOF", func(t *testing.T) {
+		instructions := ``
+		expectedToken := token.Token{Type: token.EOF, Value: ""}
+		l := New(instructions)
+		tok := l.NextToken()
+		utils.AssertToken(t, tok, expectedToken)
+	})
+
+	t.Run("ignore comments", func(t *testing.T) {
+		instructions := ` 
+		// This is a comment
+		@1234
+		// Another comment
+		(someLabel)
+		D=A
+		// Final comment
+		`
+
+		tests := []struct {
+			expectedType    token.TokenType
+			expectedLiteral string
+			testName        string
+		}{
+			{token.AInstruction, "1234", "basic A instruction"},
+			{token.Label, "someLabel", "basic label"},
+			{token.CInstruction, "D=A", "basic C instruction"},
+			{token.EOF, "", "EOF"},
+		}
+
+		l := New(instructions)
+		for _, tt := range tests {
+			tok := l.NextToken()
+			utils.AssertToken(t, tok, token.Token{Type: tt.expectedType, Value: tt.expectedLiteral})
+		}
 	})
 }
