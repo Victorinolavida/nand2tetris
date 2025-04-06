@@ -110,6 +110,14 @@ func (p *Parser) Parse() []Statement {
 	return statements
 }
 
+func (p *Parser) ConvertToBinary(statements []Statement) []string {
+	var binaryInstructions []string
+	for _, statement := range statements {
+		binaryInstructions = append(binaryInstructions, statement.GetNodeValue())
+	}
+	return binaryInstructions
+}
+
 func (p *Parser) nextToken() {
 	p.currentToken = p.lexer.NextToken()
 }

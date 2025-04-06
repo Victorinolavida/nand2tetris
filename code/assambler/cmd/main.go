@@ -1,44 +1,37 @@
 package main
 
-// import (
-// 	"flag"
-// 	"log"
-// 	"os"
+import (
+	"flag"
+	"log"
+	"strings"
 
-// 	"github.com/mailru/easyjson/buffer"
-// )
+	"nand2tetris.assambler/program"
+	"nand2tetris.assambler/utils"
+)
 
-// func main() {
+func main() {
 
-// 	filePath := flag.String("file", "", "Path to the file to be assembled")
-// 	flag.Parse()
-// 	if *filePath == "" {
-// 		log.Fatalf("no file provided, please use -file flag")
-// 		return
-// 	}
+	filePath := flag.String("file", "", "Path to the file to be assembled")
+	flag.Parse()
+	if *filePath == "" {
+		log.Fatalf("no file provided, please use -file flag")
+		return
+	}
+	if !strings.Contains(*filePath, utils.FILE_EXTENSION) {
+		log.Fatalf("file must have %s extension", utils.FILE_EXTENSION)
+		return
+	}
 
-// 	// check if the file exists
-// 	_, err := os.Stat(*filePath)
-// 	if err != nil {
-// 		if os.IsNotExist(err) {
-// 			log.Fatalf("file does not exist: %s", *filePath)
-// 		}
-// 		log.Fatalf("error opening file")
-// 	}
+	// create a new program
+	program := program.New(*filePath)
 
-// 	// read the content of the file
-// 	file, err := os.Open(*filePath)
-// 	if err != nil {
-// 		log.Fatalf("error opening file: %s", err)
-// 	}
-// 	defer file.Close()
-// 	// read the file content
-// 	buffer := buffer.New()
-// 	_, err = file.Read(buffer)
-// 	if err != nil {
-// 		log.Fatalf("error reading file: %s", err)
-// 	}
+	// open the file
+	program.Open()
 
-// 	// create a new parser
-// 	// lexer := lexer.New(buffer.String())
-// }
+	// paser
+	program.Parse()
+
+	// save the file
+	program.Save()
+
+}
