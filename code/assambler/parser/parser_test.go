@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"testing"
 
 	"nand2tetris.assambler/lexer"
@@ -101,20 +100,19 @@ func TestParseProgram(t *testing.T) {
 			t.Fatalf("Expected parsed program to be not nil")
 		}
 
-		// if len(parsedProgam) != len(expected) {
-		// 	t.Fatalf("Expected %d statements, got %d", len(expected), len(parsedProgam))
-		// }
-
+		if len(parsedProgam) != len(expected) {
+			t.Fatalf("Expected %d statements, got %d", len(expected), len(parsedProgam))
+		}
 		for i, statement := range parsedProgam {
 			if statement != nil {
 				value := statement.GetNodeValue()
-                fmt.Println(value)
-                _ = expected[i]
-                fmt.Printf("token %s\n", statement.GetNodeType())
-				// if value != expected[i] {
-				// 	t.Errorf("Expected %s, got %s", expected[i], value)
-				// }
+				expectedValue := expected[i]
+
+				if value != expectedValue {
+					t.Errorf("error got %s expected %s", value, expectedValue)
+				}
 			}
 		}
 	})
+
 }

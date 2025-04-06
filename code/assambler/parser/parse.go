@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -105,6 +104,7 @@ func (p *Parser) Parse() []Statement {
 	var statements []Statement
 	for p.currentToken.Type != token.EOF {
 		statements = append(statements, p.parseStatement())
+
 		p.nextToken()
 	}
 	return statements
@@ -112,7 +112,6 @@ func (p *Parser) Parse() []Statement {
 
 func (p *Parser) nextToken() {
 	p.currentToken = p.lexer.NextToken()
-    fmt.Println(p.currentToken)
 }
 
 func (p *Parser) parseStatement() Statement {
@@ -180,120 +179,160 @@ func (p *Parser) parseCInstructionParts(instruction string) (string, string, str
 	comp := string(ZERO)
 	jump := string(NO_JUMP)
 
-	var compType StamentType
-	var destinationType StamentType
-
-	jumpIndex := strings.Index(instruction, ";")
-	desComp := strings.Split(instruction, "=")
-
-	switch desComp[0] {
-	case "M":
-		destinationType = M
-	case "D":
-		destinationType = D
-	case "DM":
-		destinationType = DM
-	case "A":
-		destinationType = A
-	case "AM":
-		destinationType = AM
-	case "AD":
-		destinationType = AD
-	case "ADM":
-		destinationType = ADM
-	default:
-		destinationType = NO_DEST
-	}
-
-	if len(desComp) > 1 {
-		switch desComp[1] {
-		case "0":
-			compType = ZERO
-		case "1":
-			compType = ONE
-		case "-1":
-			compType = NEG_ONE
-		case "D":
-			compType = D_REG
-		case "A":
-			compType = A_REG
-		case "M":
-			compType = M_REG
-		case "!D":
-			compType = NOT_D
-		case "!A":
-			compType = NOT_A
-		case "!M":
-			compType = NOT_M
-		case "-D":
-			compType = NEG_D
-		case "-A":
-			compType = NEG_A
-		case "-M":
-			compType = NEG_M
-		case "D+1":
-			compType = D_PLUS_ONE
-		case "A+1":
-			compType = A_PLUS_ONE
-		case "M+1":
-			compType = M_PLUS_ONE
-		case "D-1":
-			compType = D_MINUS_ONE
-		case "A-1":
-			compType = A_MINUS_ONE
-		case "M-1":
-			compType = M_MINUS_ONE
-		case "D+A":
-			compType = D_PLUS_A
-		case "D+M":
-			compType = D_PLUS_M
-		case "D-A":
-			compType = D_MINUS_A
-		case "D-M":
-			compType = D_MINUS_M
-		case "A-D":
-			compType = A_MINUS_D
-		case "M-D":
-			compType = M_MINUS_D
-		case "D&A":
-			compType = D_AND_A
-		case "D&M":
-			compType = D_AND_M
-		case "D|A":
-			compType = D_OR_A
-		case "D|M":
-			compType = D_OR_M
-		default:
-			compType = ZERO
-		}
-	}
-
-	if jumpIndex > -1 {
-		jumpStr := instruction[jumpIndex+1:]
-		var jumpType StamentType
-		switch jumpStr {
-		case "JGT":
-			jumpType = JGT
-		case "JEQ":
-			jumpType = JEQ
-		case "JGE":
-			jumpType = JGE
-		case "JLT":
-			jumpType = JLT
-		case "JNE":
-			jumpType = JNE
-		case "JLE":
-			jumpType = JLE
-		case "JMP":
-			jumpType = JMP
-		default:
-			jumpType = NO_JUMP
-		}
-
-		jump = string(jumpType)
-	}
-
-	comp = string(compType)
-	dest = string(destinationType)
+	//dest=comp;jump
+	destPart, compPart, jumpPart := p.getComponents(instruction)
+	comp = string(p.getCompVal(compPart))
+	dest = string(p.getDestVal(destPart))
+	jump = string(p.getJumpVal(jumpPart))
 	return comp, dest, jump
+}
+
+func (p *Parser) getJumpVal(jump string) StamentType {
+	switch jump {
+	case "JGT":
+		return JGT
+	case "JEQ":
+		return JEQ
+	case "JGE":
+		return JGE
+	case "JLT":
+		return JLT
+	case "JNE":
+		return JNE
+	case "JLE":
+		return JLE
+	case "JMP":
+		return JMP
+	default:
+		return NO_JUMP
+	}
+}
+
+func (p *Parser) getDestVal(dest string) StamentType {
+	switch dest {
+	case "M":
+		return M
+	case "D":
+		return D
+	case "DM":
+		return DM
+	case "A":
+		return A
+	case "AM":
+		return AM
+	case "AD":
+		return AD
+	case "ADM":
+		return ADM
+	default:
+		return NO_DEST
+	}
+}
+
+func (p *Parser) getCompVal(com string) StamentType {
+	switch com {
+	case "0":
+		return ZERO
+	case "1":
+		return ONE
+	case "-1":
+		return NEG_ONE
+	case "D":
+		return D_REG
+	case "A":
+		return A_REG
+	case "M":
+		return M_REG
+	case "!D":
+		return NOT_D
+	case "!A":
+		return NOT_A
+	case "!M":
+		return NOT_M
+	case "-D":
+		return NEG_D
+	case "-A":
+		return NEG_A
+	case "-M":
+		return NEG_M
+	case "D+1":
+		return D_PLUS_ONE
+	case "A+1":
+		return A_PLUS_ONE
+	case "M+1":
+		return M_PLUS_ONE
+	case "D-1":
+		return D_MINUS_ONE
+	case "A-1":
+		return A_MINUS_ONE
+	case "M-1":
+		return M_MINUS_ONE
+	case "D+A":
+		return D_PLUS_A
+	case "D+M":
+		return D_PLUS_M
+	case "D-A":
+		return D_MINUS_A
+	case "D-M":
+		return D_MINUS_M
+	case "A-D":
+		return A_MINUS_D
+	case "M-D":
+		return M_MINUS_D
+	case "D&A":
+		return D_AND_A
+	case "D&M":
+		return D_AND_M
+	case "D|A":
+		return D_OR_A
+	case "D|M":
+		return D_OR_M
+	default:
+		return ZERO
+	}
+}
+
+/*
+returns dest, comp and jump parts of the instruction
+*/
+func (p *Parser) getComponents(instruction string) (string, string, string) {
+	// dest = comp ; jump
+	if strings.Contains(instruction, "=") && strings.Contains(instruction, ";") {
+		compPart, jumpPart := p.getJumpPart(instruction)
+		comp, dest := p.getDestPart(compPart)
+		return dest, comp, jumpPart
+	}
+
+	if strings.Contains(instruction, ";") {
+		comp, jump := p.getJumpPart(instruction)
+		return "", comp, jump
+	}
+
+	if strings.Contains(instruction, "=") {
+		dest, comp := p.getDestPart(instruction)
+		return dest, comp, ""
+	}
+	return "", "", ""
+}
+
+/*
+getDestPart returns the dest and the comp part of the instruction
+*/
+func (p *Parser) getDestPart(instruction string) (string, string) {
+	if strings.Contains(instruction, "=") {
+		parts := strings.Split(instruction, "=")
+		return parts[0], parts[1]
+	}
+	return "", ""
+}
+
+/*
+getCompPart returns the comp part of the instruction
+*/
+func (p *Parser) getJumpPart(instruction string) (string, string) {
+	if strings.Contains(instruction, ";") {
+		parts := strings.Split(instruction, ";")
+		return parts[0], parts[1]
+	}
+	return "", ""
 }
